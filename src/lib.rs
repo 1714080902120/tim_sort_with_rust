@@ -73,6 +73,25 @@ fn timsort<T: Ord + Copy>(arr: &mut [T], run: usize) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rand::{rngs::StdRng, Rng, SeedableRng};
+
+    fn sort_random_array(arr: &mut [i32]) {
+        timsort(arr, arr.len());
+    }
+
+    #[test]
+    fn test_sort_random_array() {
+        // Generate a random array of size 1000
+        let mut rng = StdRng::seed_from_u64(42);
+        let mut arr = [0i32; 1000];
+        for i in 0..arr.len() {
+            arr[i] = rng.gen_range(0..=100);
+        }
+
+        // Sort the array and check that it's sorted correctly
+        sort_random_array(&mut arr);
+        assert!(arr.windows(2).all(|w| w[0] <= w[1]));
+    }
     #[test]
     fn test_timsort() {
         let mut arr1 = [5, 2, 7, 1, 9, 4, 8, 3, 6];
@@ -80,7 +99,8 @@ mod tests {
         let mut arr3 = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
         let mut arr4 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         let mut arr5 = [1, 3, 2, 5, 4, 7, 6, 9, 8, 10];
-        
+
+
         let arr1_len = arr1.len();
         let arr2_len = arr2.len();
         let arr3_len = arr3.len();
@@ -92,12 +112,11 @@ mod tests {
         timsort(&mut arr3, arr3_len);
         timsort(&mut arr4, arr4_len);
         timsort(&mut arr5, arr5_len);
-    
+
         assert_eq!(arr1, [1, 2, 3, 4, 5, 6, 7, 8, 9]);
         assert_eq!(arr2, [1, 2, 3]);
         assert_eq!(arr3, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
         assert_eq!(arr4, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
         assert_eq!(arr5, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     }
-    
 }
